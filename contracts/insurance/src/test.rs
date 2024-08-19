@@ -1,17 +1,17 @@
 #![cfg(test)]
 
 use super::*;
-use soroban_sdk::{symbol_short, vec, Env};
 
 #[test]
-fn test() {
+fn test_get_insurance_details() {
     let env = Env::default();
     let contract_id = env.register_contract(None, InsuranceContract);
-    let client = InsuranceContractClient::new(&env, &contract_id);
+    let client  = InsuranceContractClient::new(&env, &contract_id);
 
-    let words = client.hello(&symbol_short!("Dev"));
-    assert_eq!(
-        words,
-        vec![&env, symbol_short!("Hello"), symbol_short!("Dev"),]
-    );
+    let details: InsuranceDetails = client.get_insurance_details();
+
+    assert_eq!(details.liquidation, 0);
+    assert_eq!(details.status, InsuranceStatus::UnInitialized);
+    assert_eq!(details.start, 0);
+    assert_eq!(details.end, 0);
 }
